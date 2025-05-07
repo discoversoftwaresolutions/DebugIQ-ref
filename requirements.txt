@@ -1,9 +1,6 @@
-streamlit
-streamlit_webrtc
-streamlit-ace
-google-generativeai
-soundfile
-numpy
-av
-requests
-pydub
+fastapi
+uvicorn
+openai
+pydantic
+httpx
+loguru

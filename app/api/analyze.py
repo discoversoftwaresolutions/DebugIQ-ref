@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from app.services.gpt4o_agent import run_gpt4o_agent
+from app.utils.gpt4o_client import run_gpt4o_chat
 from app.utils.parser import extract_sections
 
 router = APIRouter()
@@ -35,9 +35,8 @@ Traceback:
 Source Files:
 {input.source_files}
 """
-
-    full_response = run_gpt4o_agent(prompt)
-    parsed = extract_sections(full_response)
+    response = run_gpt4o_chat("You are a debugging agent.", prompt)
+    parsed = extract_sections(response)
 
     return AnalyzeResponse(
         patch=parsed.get("PATCH", "# No patch returned"),

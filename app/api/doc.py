@@ -1,21 +1,25 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+from app.utils.gpt4o_client import run_gpt4o_chat
 
 router = APIRouter()
 
 class DocRequest(BaseModel):
-    code: str
+    patch: str
     explanation: str
 
 class DocResponse(BaseModel):
     doc_summary: str
 
-@router.post("/summarize", response_model=DocResponse)
+@router.post("/doc", response_model=DocResponse)
 def generate_doc(input: DocRequest):
-    # Simulate GPT-4o fine-tuned agent logic
-    summary = (
-        "### Documentation Summary\n"
-        f"This patch introduces the following changes:\n\n{input.explanation}\n\n"
-        "The code provided below is intended to reflect the correct behavior after analysis."
-    )
+    prompt = f"""Summarize the following patch and explanation into a clear documentation section.
+
+### PATCH
+{input.patch}
+
+### EXPLANATION
+{input.explanation}
+"""
+    summary = run_gpt4o_chat("You are a technical writer generating patch documentation.", prompt)
     return DocResponse(doc_summary=summary)

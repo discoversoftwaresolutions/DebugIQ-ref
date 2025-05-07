@@ -1,7 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from app.services.gpt4o_agent import run_gpt4o_agent
-from app.utils.parser import extract_sections
+from app.utils.gpt4o_client import run_gpt4o_chat
 
 router = APIRouter()
 
@@ -10,48 +9,24 @@ class QARequest(BaseModel):
     patch: str
     language: str
     source_files: dict
-    patched_file_name: str = None
+    patched_file_name: str
 
 class QAResponse(BaseModel):
     llm_qa_result: str
     static_analysis_result: dict
 
-@router.post("/", response_model=QAResponse)
-def run_qa(input: QARequest):
-    prompt = f"""You are a senior code quality agent.
-Evaluate the following patch for correctness, quality, and side effects.
-Use this format in your response:
-### REVIEW
-A clear and structured critique of the patch.
-### ISSUES
-A list of potential concerns or flaws.
-### RECOMMENDATIONS
-Specific, actionable improvements.
+@router.post("/qa", response_model=QAResponse)
+def validate_patch(input: QARequest):
+    prompt = f"""You are reviewing a code patch. Below is the original traceback and the proposed fix. Explain if the patch addresses the issue, and whether it introduces new risks.
 
 Traceback:
 {input.trace}
 
 Patch:
 {input.patch}
-
-Source Files:
-{input.source_files}
 """
+    llm_result = run_gpt4o_chat("You are a senior QA analyst.", prompt)
 
-    llm_response = run_gpt4o_agent(prompt)
-    sections = extract_sections(llm_response)
+    static_result = {input.patched_file_name: [{"type": "info", "line": 1, "msg": "Static analysis placeholder"}]}
 
-    return QAResponse(
-        llm_qa_result=sections.get("REVIEW", "No review generated."),
-        static_analysis_result={
-            input.patched_file_name or "main.py": [
-                {
-                    "line": 1,
-                    "msg": sections.get("ISSUES", "No issues reported."),
-                    "symbol": "llm-review",
-                    "obj": "autonomous_check",
-                    "type": "info"
-                }
-            ]
-        }
-    )
+    return QAResponse(llm_qa_result=llm_result, static_analysis_result=static_result)

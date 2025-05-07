@@ -1,16 +1,14 @@
-name: 🚀 Render Auto-Build on Push
+name: 🔁 Auto-Deploy to Render via Deploy Hook
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: ⬇️ Checkout code
-        uses: actions/checkout@v4
-
-      - name: 📣 Notify Render to Redeploy
+      - name: 🚀 Trigger Render Deploy Hook
         run: |
           curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}

@@ -1,6 +1,9 @@
 streamlit
 streamlit_webrtc
+streamlit-ace
+google-generativeai
 soundfile
 numpy
 av
-google-generativeai
+requests
+pydub

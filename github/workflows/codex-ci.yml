@@ -1,0 +1,48 @@
+# Generate a basic GitHub Actions pipeline file to trigger Codex agent CI validation on push
+
+codex_ci_yml = '''name: 🤖 Codex Agent CI DebugIQ
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  codex-debug-ci:
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: 🧠 Run Codex Patch Validator
+        run: |
+          python scripts/codex_ci_validator.py
+
+      - name: ✅ Report Success
+        if: success()
+        run: echo "Codex CI passed successfully!"
+
+      - name: ❌ Report Failure
+        if: failure()
+        run: echo "Codex CI failed on patch validation!"
+'''
+
+# Write this to .github/workflows/codex-ci.yml
+ci_path = "/mnt/data/DebugIQ-backend/.github/workflows/codex-ci.yml"
+os.makedirs(os.path.dirname(ci_path), exist_ok=True)
+with open(ci_path, "w") as f:
+    f.write(codex_ci_yml)
+
+ci_path

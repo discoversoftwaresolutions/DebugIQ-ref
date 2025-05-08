@@ -1,6 +1,7 @@
-from pathlib import router
+# Recreate rollback_or_deploy_router.py after environment reset
+from pathlib import Path
 
-rollback_router_code = '''
+corrected_rollback_router_code = '''
 from fastapi import APIRouter
 from scripts.rollback_or_deploy import main as rollback_or_deploy_main
 
@@ -15,8 +16,8 @@ def deploy_decision():
     return {"status": "evaluated"}
 '''.strip()
 
-router_path = Path("/mnt/data/DebugIQ-backend/app/api/agents/rollback_or_deploy_router.py")
-router_path.parent.mkdir(parents=True, exist_ok=True)
-router_path.write_text(rollback_router_code + "\n")
+router_file_path = Path("/mnt/data/DebugIQ-backend/app/api/agents/rollback_or_deploy_router.py")
+router_file_path.parent.mkdir(parents=True, exist_ok=True)
+router_file_path.write_text(corrected_rollback_router_code + "\n")
 
-router_path
+router_file_path

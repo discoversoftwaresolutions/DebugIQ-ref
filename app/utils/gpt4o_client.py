@@ -16,4 +16,4 @@ def run_gpt4o_chat(system_prompt, user_input):
         )
         return response.choices[0].message["content"].strip()
     except Exception as e:
-        return f"[GPT-4o Error] {e}"
+        return f"[GPT-4o Error] {str(e)}"

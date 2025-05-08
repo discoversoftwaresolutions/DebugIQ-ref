@@ -6,3 +6,4 @@ httpx
 loguru
 SpeechRecognition
 pyttsx3
+python-multipart

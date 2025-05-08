@@ -15,18 +15,28 @@ class QAResponse(BaseModel):
     llm_qa_result: str
     static_analysis_result: dict
 
-@router.post("/qa", response_model=QAResponse)
+@router.post("/", response_model=QAResponse)
 def validate_patch(input: QARequest):
-    prompt = f"""You are reviewing a code patch. Below is the original traceback and the proposed fix. Explain if the patch addresses the issue, and whether it introduces new risks.
+    prompt = f"""You are a QA agent reviewing a patch.
+Review the following:
 
 Traceback:
 {input.trace}
 
 Patch:
 {input.patch}
+
+Files:
+{input.source_files}
+
+Answer:
+- Does it fix the issue?
+- Are there edge cases or bugs?
+- Any improvements?
+
+Reply in markdown format.
 """
-    llm_result = run_gpt4o_chat("You are a senior QA analyst.", prompt)
+    result = run_gpt4o_chat("You are a code quality auditor.", prompt)
+    static_result = {input.patched_file_name: [{"type": "info", "line": 1, "msg": "Static check placeholder"}]}
 
-    static_result = {input.patched_file_name: [{"type": "info", "line": 1, "msg": "Static analysis placeholder"}]}
-
-    return QAResponse(llm_qa_result=llm_result, static_analysis_result=static_result)
+    return QAResponse(llm_qa_result=result, static_analysis_result=static_result)

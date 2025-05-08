@@ -20,14 +20,18 @@ class AnalyzeResponse(BaseModel):
 
 @router.post("/analyze", response_model=AnalyzeResponse)
 def analyze_code(input: AnalyzeRequest):
-    prompt = f"""You are an autonomous debugging agent. Analyze the following Python traceback and source code.
-Output sections using this format:
+    prompt = f"""You are an autonomous debugging agent.
+Analyze the following traceback and source files.
+Output the following sections:
+
 ### PATCH
-<corrected source file content>
+<corrected source code>
+
 ### EXPLANATION
-<description of what was fixed and why>
+<why you made these changes>
+
 ### SUMMARY
-<markdown documentation summary>
+<markdown documentation for the patch>
 
 Traceback:
 {input.trace}
@@ -35,8 +39,9 @@ Traceback:
 Source Files:
 {input.source_files}
 """
-    response = run_gpt4o_chat("You are a debugging agent.", prompt)
-    parsed = extract_sections(response)
+
+    result = run_gpt4o_chat("You are a debugging agent for code intelligence.", prompt)
+    parsed = extract_sections(result)
 
     return AnalyzeResponse(
         patch=parsed.get("PATCH", "# No patch returned"),

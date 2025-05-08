@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import router
 from pydantic import BaseModel
 from app.utils.gpt4o_client import run_gpt4o_chat
 from app.utils.parser import extract_sections

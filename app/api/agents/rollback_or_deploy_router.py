@@ -1,11 +1,11 @@
 # Recreate rollback_or_deploy_router.py after environment reset
 from pathlib import Path
+router = APIRouter()
 
 corrected_rollback_router_code = '''
 from fastapi import APIRouter
 from scripts.rollback_or_deploy import main as rollback_or_deploy_main
 
-router = APIRouter()
 
 @router.post("/deploy-manager/decide", tags=["Deploy Manager"])
 def deploy_decision():

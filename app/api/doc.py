@@ -11,15 +11,16 @@ class DocRequest(BaseModel):
 class DocResponse(BaseModel):
     doc_summary: str
 
-@router.post("/doc", response_model=DocResponse)
+@router.post("/", response_model=DocResponse)
 def generate_doc(input: DocRequest):
-    prompt = f"""Summarize the following patch and explanation into a clear documentation section.
-
-### PATCH
+    prompt = f"""Document the following patch using markdown.
+Patch:
 {input.patch}
 
-### EXPLANATION
+Explanation:
 {input.explanation}
+
+Respond with a clean markdown summary.
 """
-    summary = run_gpt4o_chat("You are a technical writer generating patch documentation.", prompt)
+    summary = run_gpt4o_chat("You are a senior documentation writer.", prompt)
     return DocResponse(doc_summary=summary)

@@ -5,7 +5,15 @@ from app.api import qa      # Assumes qa.py exists in app/api
 from app.api import doc     # Assumes doc.py exists in app/api
 from app.api import config  # Assumes config.py exists in app/api for API endpoint configuration
 from app.api import voice   # Assumes voice.py exists in app/api for voice features
+from app.api.agents import (
+    fix_memory_router,
+    regression_monitor_router,
+    rollback_or_deploy_router
+)
 
+app.include_router(fix_memory_router.router)
+app.include_router(regression_monitor_router.router)
+app.include_router(rollback_or_deploy_router.router)
 app = FastAPI(title="DebugIQ API - GPT-4o & Gemini Powered")
 
 # Configure CORS to allow front-end access

@@ -1,8 +1,23 @@
-# DebugIQ-backend/app/api/config.py
 from fastapi import APIRouter, Request
-# You need to have app/schemas.py with ApiEndpoints defined
 from app.schemas import ApiEndpoints
 
+
+config_router = APIRouter()
+
+@config_router.get("/config", response_model=ApiEndpoints, tags=["Configuration"])
+async def get_api_endpoints(request: Request):
+    base_url = str(request.base_url).rstrip('/')
+    return ApiEndpoints(
+        analyze=f"{base_url}/debugiq/analyze",
+        qa=f"{base_url}/qa/",
+        doc=f"{base_url}/doc/",
+        voice_transcribe=f"{base_url}/voice/transcribe",
+        voice_command=f"{base_url}/voice/command",
+        voice_speak=f"{base_url}/voice/speak",
+        model="gpt-4o",
+        voice_provider="gemini",
+        debug=True
+    )
 # Define the API router for configuration endpoints
 config_router = APIRouter()
 

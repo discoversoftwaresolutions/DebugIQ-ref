@@ -1,4 +1,5 @@
-from fastapi import router UploadFile, File
+from fastapi import APIRouter
+UploadFile, File
 from pydantic import BaseModel
 from app.utils.gpt4o_client import run_gpt4o_chat
 

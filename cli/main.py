@@ -8,5 +8,5 @@ review_parser.add_argument("--pr-title", required=True)
 review_parser.add_argument("--pr-description", required=True)
 review_parser.add_argument("--code-diff", required=True)
 case "review-pr":
-    from debugiq_agents.agents import review_pr
+    from debugiq_backend/app/api/agents import review_pr
     result = review_pr.review_pull_request(**args_dict)

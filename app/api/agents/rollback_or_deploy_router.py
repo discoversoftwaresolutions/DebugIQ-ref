@@ -1,5 +1,4 @@
-# Create or overwrite a valid rollback_or_deploy_router.py with an exposed `router`
-from pathlib import Path
+from pathlib import router
 
 rollback_router_code = '''
 from fastapi import APIRouter

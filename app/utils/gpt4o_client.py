@@ -1,11 +1,12 @@
-import openai
+# app/utils/gpt4o_client.py
+from openai import OpenAI
 import os
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def run_gpt4o_chat(system_prompt, user_input):
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": system_prompt},
@@ -14,6 +15,7 @@ def run_gpt4o_chat(system_prompt, user_input):
             temperature=0.3,
             max_tokens=1000
         )
-        return response.choices[0].message["content"].strip()
+        return response.choices[0].message.content.strip()
     except Exception as e:
-        return f"[GPT-4o Error] {str(e)}"
+        print(f"[GPT-4o ERROR] {e}")
+        return f"[GPT-4o ERROR] {e}"

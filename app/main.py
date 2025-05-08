@@ -5,7 +5,7 @@ from app.api import analyze, qa, doc, config, voice
 from app.api.agents import (
     fix_memory_router,
     regression_monitor_router,
-    rollback_or_deploy_router
+    
 )
 
 app = FastAPI(title="DebugIQ API - GPT-4o & Gemini Powered")
@@ -22,7 +22,7 @@ app.add_middleware(
 # Core DebugIQ routers
 app.include_router(fix_memory_router.router, prefix="/agents", tags=["Fix Memory"])
 app.include_router(regression_monitor_router.router, prefix="/agents", tags=["Regression Monitor"])
-app.include_router(rollback_or_deploy_router.router, prefix="/agents", tags=["Deploy Manager"])
+
 
 app.include_router(analyze.router, prefix="/debugiq", tags=["Analysis"])
 app.include_router(qa.router, prefix="/qa", tags=["Quality Assurance"])

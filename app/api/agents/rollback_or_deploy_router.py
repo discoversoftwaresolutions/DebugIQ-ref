@@ -1,41 +1,23 @@
-import os
-import subprocess
-import logging
+# Create or overwrite a valid rollback_or_deploy_router.py with an exposed `router`
+from pathlib import Path
 
-def rollback():
-    print("[⚠️] Rollback triggered. Reverting last commit...")
-    subprocess.run(["git", "reset", "--hard", "HEAD~1"], check=True)
-    print("[✅] Rollback complete.")
+rollback_router_code = '''
+from fastapi import APIRouter
+from scripts.rollback_or_deploy import main as rollback_or_deploy_main
 
-def deploy():
-    print("[🚀] Deploying via CI/CD...")
-    repo = os.getenv("GITHUB_REPO")
-    token = os.getenv("GITHUB_TOKEN")
-    workflow_id = os.getenv("DEPLOY_WORKFLOW_ID")
-    if repo and token and workflow_id:
-        import requests
-        response = requests.post(
-            f"https://api.github.com/repos/{repo}/actions/workflows/{workflow_id}/dispatches",
-            headers={
-                "Authorization": f"Bearer {token}",
-                "Accept": "application/vnd.github+json"
-            },
-            json={"ref": "main"}
-        )
-        response.raise_for_status()
-        print("[✅] Deployment triggered.")
-    else:
-        print("[❌] Missing required env vars: GITHUB_REPO, GITHUB_TOKEN, DEPLOY_WORKFLOW_ID")
+router = APIRouter()
 
-def main():
-    report_file = os.getenv("REGRESSION_REPORT", "regression_report.json")
-    if os.path.exists(report_file):
-        import json
-        with open(report_file) as f:
-            report = json.load(f)
-        if report.get("regressions"):
-            rollback()
-        else:
-            deploy()
-    else:
-        print("[❌] Regression report not found.")
+@router.post("/deploy-manager/decide", tags=["Deploy Manager"])
+def deploy_decision():
+    """
+    Autonomous decision to deploy or rollback based on regression report.
+    """
+    rollback_or_deploy_main()
+    return {"status": "evaluated"}
+'''.strip()
+
+router_path = Path("/mnt/data/DebugIQ-backend/app/api/agents/rollback_or_deploy_router.py")
+router_path.parent.mkdir(parents=True, exist_ok=True)
+router_path.write_text(rollback_router_code + "\n")
+
+router_path

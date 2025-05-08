@@ -4,4 +4,4 @@ openai
 pydantic
 httpx
 loguru
-speech-recognition
+SpeechRecognition

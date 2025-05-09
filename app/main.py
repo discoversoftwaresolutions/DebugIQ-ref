@@ -38,4 +38,8 @@ async def health_check():
     return {"status": "ok"}
 '''.strip()
 
-main_py_path.write_text(clean_main_code + "\n")
+
+main_py_path = Path("/mnt/data/DebugIQ-backend/app/main.py")
+main_py_path.parent.mkdir(parents=True, exist_ok=True)
+
+

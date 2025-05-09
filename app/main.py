@@ -38,5 +38,4 @@ async def health_check():
     return {"status": "ok"}
 '''.strip()
 
-# Overwrite main.py with clean production version
-main_py_path.write_text(clean_main_prod + "\n")
+

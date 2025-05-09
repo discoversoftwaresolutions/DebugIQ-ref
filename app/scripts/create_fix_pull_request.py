@@ -37,7 +37,7 @@ def create_pull_request(issue_id, branch_name, code_diff, diagnosis_details, val
     try:
         print("[🤖] Generating PR title and body using AI...")
         # This is the multi-line f-string definition that needed correct termination
-        pr_prompt = 
+        pr_prompt 
 Create a professional Pull Request title and body from the following:
 
 - Issue ID: {issue_id}

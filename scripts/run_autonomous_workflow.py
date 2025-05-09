@@ -1,4 +1,9 @@
-# Generate a clean, production-grade run_autonomous_workflow.py
+# Re-create and write the autonomous workflow file after code execution environment reset
+from pathlib import Path
+
+workflow_path = Path("/mnt/data/DebugIQ-backend/scripts/run_autonomous_workflow.py")
+workflow_path.parent.mkdir(parents=True, exist_ok=True)
+
 workflow_code = '''
 # scripts/run_autonomous_workflow.py
 
@@ -28,7 +33,7 @@ def run_workflow_for_issue(issue_id):
         return {"error": "Diagnosis failed", "issue_id": issue_id}
 
     # 3. Simulate patch suggestion (placeholder)
-    patch_diff = f"- buggy_code()\n+ fixed_code()"  # You can wire agent_suggest_patch next
+    patch_diff = f"- buggy_code()\\n+ fixed_code()"  # You can wire agent_suggest_patch next
     patch_suggestion = {
         "suggested_patch_diff": patch_diff,
         "explanation": "Mock patch to demonstrate flow"
@@ -63,3 +68,5 @@ def run_workflow_for_issue(issue_id):
 '''.strip()
 
 workflow_path.write_text(workflow_code + "\n")
+
+workflow_path

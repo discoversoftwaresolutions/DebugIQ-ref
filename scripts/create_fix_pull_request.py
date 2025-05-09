@@ -1,15 +1,21 @@
-from pathlib import Path # Imported but not used in the function below
-import os # Imported but not used
-import sys # Imported but not used
+# Content for: app/scripts/create_fix_pull_request.py
+# (Or your_project_root/scripts/create_fix_pull_request.py)
+
+from pathlib import Path
+import os
+import sys
 import json
 
 # Relative imports - assumes 'utils' is a directory in the same package
+# and contains these modules/files.
 from .utils import git_host_api
-from .utils import platform_data_api # Assumes platform_data_api.py exists in the 'utils' directory
-from .utils import ai_api_client # Assumes ai_api_client.py exists in the 'utils' directory
+from .utils import platform_data_api
+from .utils import ai_api_client
 
-# Note: If this file itself is platform_data_api.py, the import above is wrong.
-# Assuming this file is NOT platform_data_api.py.
+# Note: If this file itself was intended to BE one of the .utils files,
+# then the relative imports above would be incorrect.
+# Assuming this file is NOT one of the .utils files, but is in a package
+# where a 'utils' sibling directory/package exists.
 
 def create_pull_request(issue_id, branch_name, code_diff, diagnosis_details, validation_results):
     """
@@ -30,6 +36,7 @@ def create_pull_request(issue_id, branch_name, code_diff, diagnosis_details, val
     # Step 1: Use AI to generate PR content
     try:
         print("[🤖] Generating PR title and body using AI...")
+        # This is the multi-line f-string definition that needed correct termination
         pr_prompt = f"""
 Create a professional Pull Request title and body from the following:
 

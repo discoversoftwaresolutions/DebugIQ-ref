@@ -8,3 +8,4 @@ SpeechRecognition
 pyttsx3
 python-multipart
 google-generativeai
+google-cloud-texttospeech

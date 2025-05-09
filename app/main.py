@@ -1,5 +1,5 @@
-# Force overwrite main.py with clean syntax and proper router inclusion
-clean_main_code = '''
+# Generate clean production-only main.py (no dev or file write logic)
+clean_main_prod = '''
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -38,8 +38,5 @@ async def health_check():
     return {"status": "ok"}
 '''.strip()
 
-
-main_py_path = Path("/mnt/data/DebugIQ-backend/app/main.py")
-main_py_path.parent.mkdir(parents=True, exist_ok=True)
-
-
+# Overwrite main.py with clean production version
+main_py_path.write_text(clean_main_prod + "\n")

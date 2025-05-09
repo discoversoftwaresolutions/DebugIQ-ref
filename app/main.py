@@ -38,8 +38,7 @@ app.include_router(qa.router, prefix="/qa", tags=["Quality Assurance"])
 app.include_router(doc.router, prefix="/doc", tags=["Documentation"])
 app.include_router(voice.router, prefix="/voice", tags=["Voice Assistant"])
 app.include_router(config.config_router, prefix="/api", tags=["Configuration"])
-
-# Use the routers imported *as* specific names
+app.include_router(voice_interactive_router.router, prefix="/voice") # Use the routers imported *as* specific names
 app.include_router(autonomous_router, prefix="/workflow", tags=["Autonomous Workflow"])
 app.include_router(metrics_router) # Assuming this router's paths don't need a prefix
 app.include_router(issues_router) # Assuming this router's paths don't need a prefix

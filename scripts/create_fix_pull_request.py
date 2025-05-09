@@ -1,7 +1,6 @@
 from pathlib import Path
 
 # Production-ready version of create_fix_pull_request.py for DebugIQ
-pr_code = '''
 import os
 import sys
 import json

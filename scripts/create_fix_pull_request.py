@@ -25,5 +25,4 @@ Create a professional Pull Request title and body from the following:
 - Issue ID: {issue_id}
 - Diagnosis: {json.dumps(diagnosis_details, indent=2)}
 - Code Diff:
-```diff
-{code_diff}
+

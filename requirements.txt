@@ -7,3 +7,4 @@ loguru
 SpeechRecognition
 pyttsx3
 python-multipart
+google-generativeai

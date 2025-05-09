@@ -1,12 +1,15 @@
-from pathlib import Path
-
-# Production-ready version of create_fix_pull_request.py for DebugIQ
-import os
-import sys
+from pathlib import Path # Imported but not used in the function below
+import os # Imported but not used
+import sys # Imported but not used
 import json
+
+# Relative imports - assumes 'utils' is a directory in the same package
 from .utils import git_host_api
-from .utils import platform_data_api
-from .utils import ai_api_client
+from .utils import platform_data_api # Assumes platform_data_api.py exists in the 'utils' directory
+from .utils import ai_api_client # Assumes ai_api_client.py exists in the 'utils' directory
+
+# Note: If this file itself is platform_data_api.py, the import above is wrong.
+# Assuming this file is NOT platform_data_api.py.
 
 def create_pull_request(issue_id, branch_name, code_diff, diagnosis_details, validation_results):
     """
@@ -28,37 +31,10 @@ def create_pull_request(issue_id, branch_name, code_diff, diagnosis_details, val
     try:
         print("[🤖] Generating PR title and body using AI...")
         pr_prompt = f"""
-        Create a professional Pull Request title and body from the following:
+Create a professional Pull Request title and body from the following:
 
-        - Issue ID: {issue_id}
-        - Diagnosis: {json.dumps(diagnosis_details, indent=2)}
-        - Code Diff:
-        ```diff
-        {code_diff}
-        ```
-        - Validation Summary:
-        {validation_results.get("ai_assessment", "No AI validation summary available.")}
-
-        Output as JSON:
-        {{
-            "title": "...",
-            "body": "..."
-        }}
-        """
-
-        # Real API call would be here
-        # response = ai_api_client.chat_completion(...)
-        # pr_content = json.loads(response.choices[0].message.content)
-
-        # Mock response for development
-        pr_content = {
-            "title": f"fix({issue_id}): Resolve {diagnosis_details.get('root_cause', 'an error')}",
-            "body": f\"\"\"
-Automated fix generated for Issue **{issue_id}**.
-
-### 🧠 Root Cause:
-{diagnosis_details.get('root_cause', 'Unknown')}
-
-### 🛠️ Patch Summary:
+- Issue ID: {issue_id}
+- Diagnosis: {json.dumps(diagnosis_details, indent=2)}
+- Code Diff:
 ```diff
 {code_diff}

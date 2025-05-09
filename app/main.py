@@ -35,7 +35,7 @@ app.include_router(qa.router, prefix="/qa", tags=["Quality Assurance"])
 app.include_router(doc.router, prefix="/doc", tags=["Documentation"])
 app.include_router(voice.router, prefix="/voice", tags=["Voice Assistant"])
 app.include_router(config.config_router, prefix="/api", tags=["Configuration"])
-app.include_router(autonomous_router)@app.get("/")
+app.include_router(autonomous_router)@app.get("/") prefix="/workflow", tags=["Autonomous Workflow"])
 
 async def read_root():
     return {"message": "Welcome to the DebugIQ API"}

@@ -21,8 +21,6 @@ def create_pull_request(issue_id, branch_name, code_diff, diagnosis_details, val
 
         pr_prompt = f\"\"\"
 Create a professional Pull Request title and body from the following:
-
 - Issue ID: {issue_id}
 - Diagnosis: {json.dumps(diagnosis_details, indent=2)}
 - Code Diff:
-

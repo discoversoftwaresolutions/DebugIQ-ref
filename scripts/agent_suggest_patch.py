@@ -4,7 +4,7 @@ import traceback
 from typing import Optional, Dict
 
 from scripts import platform_data_api
-from utils.ai_api_clients import call_ai_agent  # ✅ Fixed import path based on PYTHONPATH=/app
+from scripts.utils.ai_api_clients import call_ai_agent # ✅ Fixed import path based on PYTHONPATH=/app
 
 # --- Configuration ---
 PATCH_SUGGESTION_TASK_TYPE = "patch_suggestion"

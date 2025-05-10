@@ -4,9 +4,8 @@ import os
 import json # Import json to parse AI response if formatted as JSON
 from scripts import platform_data_api
 # Import the function to call AI models
-from api_clients.ai_clients import call_ai_agent # Assuming the above file is in api_clients directory
-import traceback # Import traceback for error logging
-
+# from api_clients.ai_clients import call_ai_agent # Assuming the above file is in api_clients directory
+from api_clients.ai_api_client import call_ai_agent # Corrected import
 # --- Configuration ---
 # Define the task type for AI calls in this script
 DIAGNOSIS_TASK_TYPE = "diagnosis"

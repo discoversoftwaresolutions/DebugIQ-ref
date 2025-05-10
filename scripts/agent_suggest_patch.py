@@ -3,7 +3,7 @@
 import os
 import json
 from scripts import platform_data_api
-from api_clients.ai_clients import call_ai_agent
+from ai_api_clients import call_ai_agent
 import traceback
 
 # --- Configuration ---

@@ -1,1 +1,1 @@
-from. import ai_api_client.py
+from. import ai_api_client

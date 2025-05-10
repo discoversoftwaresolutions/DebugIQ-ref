@@ -12,6 +12,7 @@ from scripts import (
 router = APIRouter()
 
 # --- Pydantic Models for Incoming Payloads ---
+
 class IssueInput(BaseModel):
     issue_id: str
 
@@ -23,6 +24,7 @@ class RawIssueData(BaseModel):
     raw_data: dict
 
 # --- Endpoint: Run Full Workflow ---
+
 @router.post("/workflow/run", tags=["Autonomous Agents"])
 def run_autonomous(issue: IssueInput):
     """
@@ -31,6 +33,7 @@ def run_autonomous(issue: IssueInput):
     return run_autonomous_workflow.run_workflow_for_issue(issue.issue_id)
 
 # --- Endpoint: Ingest + Triage New Raw Issue ---
+
 @router.post("/workflow/triage", tags=["Autonomous Agents"])
 def triage_issue(payload: RawIssueData):
     """
@@ -39,6 +42,7 @@ def triage_issue(payload: RawIssueData):
     return ingest_and_triage_issue.ingest_and_triage(payload.raw_data)
 
 # --- Endpoint: Run Autonomous Diagnosis ---
+
 @router.post("/workflow/diagnose", tags=["Autonomous Agents"])
 def diagnose_issue(issue: IssueInput):
     """
@@ -47,6 +51,7 @@ def diagnose_issue(issue: IssueInput):
     return autonomous_diagnose_issue.autonomous_diagnose(issue.issue_id)
 
 # --- Endpoint: Validate a Patch via AI/Tests ---
+
 @router.post("/workflow/validate", tags=["Autonomous Agents"])
 def validate_patch(payload: PatchInput):
     """
@@ -58,6 +63,7 @@ def validate_patch(payload: PatchInput):
     )
 
 # --- Endpoint: AI-Generated PR Creation ---
+
 @router.post("/workflow/create-pr", tags=["Autonomous Agents"])
 def create_pr(issue: IssueInput):
     """

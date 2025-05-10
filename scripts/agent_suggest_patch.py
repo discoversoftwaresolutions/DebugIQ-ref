@@ -2,9 +2,9 @@
 
 import os
 import json
-from scripts import platform_data_api
-from ai_api_clients import call_ai_agent
 import traceback
+from scripts import platform_data_api
+from scripts.utils.ai_api_clients import call_ai_agent  # ✅ Corrected import path
 
 # --- Configuration ---
 PATCH_SUGGESTION_TASK_TYPE = "patch_suggestion"
@@ -39,7 +39,7 @@ def agent_suggest_patch(issue_id: str, diagnosis: dict) -> dict | None:
         print(f"❌ Patch suggestion failed: Could not fetch code context or context is empty for issue {issue_id}.")
         return None
 
-    # Construct a precise AI prompt (without markdown or backtick formatting)
+    # Construct AI prompt
     patch_prompt = f"""
 You are an AI assistant tasked with generating a code patch in the unified diff format to fix a software bug.
 The user will provide a diagnosis and relevant code context.

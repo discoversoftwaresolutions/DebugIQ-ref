@@ -1,18 +1,26 @@
-# DebugIQ-backend/scripts/agent_suggest_patch.py
-
 import os
 import json
 import traceback
+from typing import Optional, Dict
+
 from scripts import platform_data_api
-from scripts.utils.ai_api_clients import call_ai_agent  # ✅ Corrected import path
+from utils.ai_api_clients import call_ai_agent  # ✅ Fixed import path based on PYTHONPATH=/app
 
 # --- Configuration ---
 PATCH_SUGGESTION_TASK_TYPE = "patch_suggestion"
 # --- End Configuration ---
 
-def agent_suggest_patch(issue_id: str, diagnosis: dict) -> dict | None:
+
+def agent_suggest_patch(issue_id: str, diagnosis: dict) -> Optional[Dict[str, str]]:
     """
     Uses AI to suggest a code patch based on the diagnosis.
+
+    Args:
+        issue_id (str): The issue identifier.
+        diagnosis (dict): The AI diagnosis dictionary.
+
+    Returns:
+        dict: Contains 'patch' and 'explanation' if successful; None otherwise.
     """
     print(f"🩹 Starting patch suggestion for issue: {issue_id}")
 
@@ -27,7 +35,7 @@ def agent_suggest_patch(issue_id: str, diagnosis: dict) -> dict | None:
     ))
 
     if not files_to_fetch:
-        print(f"⚠️ No relevant files or suggested areas found in diagnosis for issue {issue_id}. Cannot suggest a patch.")
+        print(f"⚠️ No relevant files or suggested areas found in diagnosis for issue {issue_id}.")
         return None
 
     relevant_code = platform_data_api.fetch_code_context(
@@ -36,19 +44,18 @@ def agent_suggest_patch(issue_id: str, diagnosis: dict) -> dict | None:
     )
 
     if not relevant_code or relevant_code.strip() == "":
-        print(f"❌ Patch suggestion failed: Could not fetch code context or context is empty for issue {issue_id}.")
+        print(f"❌ Patch suggestion failed: Empty or unavailable code context for issue {issue_id}.")
         return None
 
-    # Construct AI prompt
+    # --- Prompt Construction ---
     patch_prompt = f"""
-You are an AI assistant tasked with generating a code patch in the unified diff format to fix a software bug.
-The user will provide a diagnosis and relevant code context.
-Your output must contain ONLY the patch in unified diff format, followed by a brief explanation.
-Do not include any other text, introductions, or conclusions outside of the diff and explanation.
+You are an AI assistant tasked with generating a code patch in unified diff format to fix a software bug.
+The user provides a diagnosis and code context.
+Your output must contain ONLY the patch (no markdown) followed by a brief explanation.
 
 Diagnosis:
-Root Cause: {diagnosis.get('root_cause', 'Unknown.')}
-Detailed Analysis: {diagnosis.get('detailed_analysis', 'No detailed analysis.')}
+Root Cause: {diagnosis.get('root_cause', 'Unknown')}
+Detailed Analysis: {diagnosis.get('detailed_analysis', 'None')}
 Suggested Fix Areas: {', '.join(diagnosis.get('suggested_fix_areas', ['None']))}
 
 Relevant Code Context:
@@ -56,33 +63,32 @@ Relevant Code Context:
 {relevant_code}
 ---
 
-Generate the patch in unified diff format, then provide a brief explanation.
-
-Example output format:
---- a/path/to/file.py
-+++ b/path/to/file.py
-@@ ... @@
-... code changes ...
+Output Format:
+--- a/file.py
++++ b/file.py
+@@ -line +line @@
+...diff...
 
 Explanation:
-This patch corrects ...
+This patch fixes ...
 """
 
     try:
         response = call_ai_agent(
             task_type=PATCH_SUGGESTION_TASK_TYPE,
-            prompt=patch_prompt
+            prompt=patch_prompt.strip()
         )
 
         if not response:
-            print(f"❌ No response from AI for issue {issue_id}")
+            print(f"❌ AI did not return a response for issue {issue_id}")
             return None
 
+        # Parse structured response
         response_data = json.loads(response) if isinstance(response, str) else response
 
         return {
-            "patch": response_data.get("patch", ""),
-            "explanation": response_data.get("explanation", "No explanation provided.")
+            "patch": response_data.get("patch", "").strip(),
+            "explanation": response_data.get("explanation", "No explanation provided.").strip()
         }
 
     except Exception as e:

@@ -2,7 +2,8 @@ import os
 import json
 import traceback
 from scripts import platform_data_api
-from scripts.utils.ai_api_client import call_ai_agent  # Corrected import
+from utils.ai_api_client import call_ai_agent
+
 
 DIAGNOSIS_TASK_TYPE = "diagnosis"
 
